@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - test3  # Specify your active branches here
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Install dependencies (example for Python)
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+
+    # Run tests
+    - name: Run tests
+      run: |
+        source venv/bin/activate
+        pytest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Ensures 'build' job runs first
+
+    steps:
+    - name: Deploy application
+      run: |
+        echo "Deploying to the server..."
+        # Add your deployment steps here
